@@ -15,27 +15,33 @@ class TurtleEx(Turtle, TurtleGraphicsError):
         step (optional) - an integer
         edgelen (optional) -- a positive number
 
-        Draw a 2D regular star (https://en.wikipedia.org/wiki/Star_polygon):
-        a regular non-convex polygon, noted {n/m} where n is the number of
-        vertices and m is the step used to connect the vertices. radius is
-        the radius of the (virtual) enclosing circle on which the star points
-        (vertices) are regularly placed. The star is built by connecting the
-        vertex i to the vertex i+step along the circle. step is expected to
-        be between 1 (resulting in a regular convex polygon) and n/2. 
-        
-        if n and m are not coprime (k=gcd(n,m)>1) the construction is done via
-        stellation: the figure is composed of k star polygons {(n/k) / (m/k)}
+        Draw a regular star polygon (https://en.wikipedia.org/wiki/Star_polygon)
+        defined by the radius of the circumscribing circle and by its Schlafli
+        symbol {n/m} where n is the number of vertices and m is the step used
+        to connect the vertices. The vertices are numbered from 0 to n-1 and
+        regularly placed on the circle. Starting from the vertex 0, the star is
+        built step by step by connecting the vertex i to the vertex (i+m) % n
+        until the initial vertex 0 is reached. If n and m are coprime (have no
+        common divisor except 1), all vertex are reached and the star is done.
+        if n and m are not coprime (d=gcd(n,m)>1) the construction is done via
+        stellation: the figure is composed of d star polygons {(n//d) / (m//d)}
         e.g.: hexagramme {6/2} is composed of 2 triangles: {6/2} ==> 2x{3}
               {12/3} ==> 3x{4}       {30/12} ==> 6x{5/2}
 
+        See: https://en.wikipedia.org/wiki/Star_polygon
+         and https://en.wikipedia.org/wiki/Stellation 
+
+        The step m is expected to be between 1 and n-1. m=1 corresponds to a
+        regular convex polygon noted {n} (which can be also be traced with 
+        circle(radius, steps=n)). Values between n/2 and n-1 invert the direction
+        of the drawing.
         if m<0 the star polygon {n/-m} is drawn sequentially. Each star point
         is connected to the next one by 2 edges (forming a \/). The result is
         a star figure without interior segments (only the external hull is
         drawn, i.e. without any crossing lines).
         
-        Alternatively, it is possible to provide edgelen: the length of star
-        edges (those forming the \/). In that case, no value should be
-        provided for the step m.
+        Alternatively, it is possible to omit the step m and to provide edgelen:
+        the length of star edges (those forming the \/). 
         
         If neither step nor edgelen is provided, m is computed as (n-1)//2
         
@@ -44,7 +50,8 @@ class TurtleEx(Turtle, TurtleGraphicsError):
             - if circle(radius, steps=n) is used to draw a polygon {n}, the
               vertices also corresponds to the vertices of any star {n/m}.
             - it draws the star in counterclockwise direction if radius is
-              positive, otherwise in clockwise direction.
+              positive, otherwise in clockwise direction. NB: a m>n//2 also
+              inverts the direction.
               
         At the end, the position and orientation are the same as at the start
         (even in case of stellation).
@@ -81,8 +88,11 @@ class TurtleEx(Turtle, TurtleGraphicsError):
                 onlyHull = False
             else:
                 m = -m
-            if m > n / 2:
-                m = n - m
+                if m <= 0 or m >= n:
+                    raise TurtleGraphicsError("Bad argument for step should be in [1..%d]" % (n - 1))
+                if m > n / 2:  # result in the inversion of the drawing
+                    m = n - m
+                    r = -r     # report the inversion to r to handle stellation in the chosen direction 
         
         sgn = 1
         if r < 0:
@@ -124,8 +134,8 @@ class TurtleEx(Turtle, TurtleGraphicsError):
 
         if not onlyHull: # mode {m/n} with internal edges (as done by hand for a 5-points star)
             
-            k = math.gcd(n, m)
-            n1 = n // k
+            d = math.gcd(n, m)
+            n1 = n // d
 
             self._rotate(-gamma/2)
             for i in range(n):
@@ -142,7 +152,7 @@ class TurtleEx(Turtle, TurtleGraphicsError):
             if self.filling():  # go backward to ensure filling will be ok (finish at start point)
                 self.penup()
                 self._rotate(beta + delta)    
-                for i in range(k - 1):
+                for i in range(d - 1):
                     self.forward(s)
                     self._rotate(-alpha)
                 self.pendown()
@@ -186,7 +196,9 @@ t.pendown()
 t.speed('fastest')
 t.circle(r)
 t.color('green')
-t.star(r, n, 1) # a convex regular polygon (can also be done with t.circle(r, steps = n))
+# trace a convex regular polygon. Could be done with t.star(r, n, 1) but use
+# circle() to check vertices share the same location with both methods
+t.circle(r, steps = n)
 
 t.color('black', 'yellow')
 t.begin_fill()
