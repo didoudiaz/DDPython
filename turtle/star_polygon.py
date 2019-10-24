@@ -181,47 +181,60 @@ class TurtleEx(Turtle, TurtleGraphicsError):
 
 # A little demo                
 
-t = TurtleEx()
+if __name__ == "__main__":
+    
+    def DemoA():
+        r=250
+        n=7   # test with different n (5, 8, 12...)
 
-r=250
-n=7
+        t.hideturtle()
+        t.dot()
 
-t.hideturtle()
-t.dot()
+        t.penup()
+        t.sety(-r)
+        t.pendown()
 
-t.penup()
-t.sety(-r)
-t.pendown()
+        t.speed('fastest')
+        t.circle(r)
+        t.color('green')
+        # trace a convex regular polygon. Could be done with t.star(r, n, 1) but use
+        # circle() to check vertices share the same location with both methods
+        t.circle(r, steps = n)
 
-t.speed('fastest')
-t.circle(r)
-t.color('green')
-# trace a convex regular polygon. Could be done with t.star(r, n, 1) but use
-# circle() to check vertices share the same location with both methods
-t.circle(r, steps = n)
+        t.color('black', 'yellow')
+        t.begin_fill()
+        t.star(r, n, 2)
+        t.color('blue')
+        t.star(r, n, -3)
+        t.color('orange')
+        t.star(r, n, edgelen=220)
+        t.star(r, n, edgelen=200)
+        t.color('lightblue')
+        t.end_fill()
 
-t.color('black', 'yellow')
-t.begin_fill()
-t.star(r, n, 2)
-t.color('blue')
-t.star(r, n, -3)
-t.color('orange')
-t.star(r, n, edgelen=220)
-t.star(r, n, edgelen=200)
-t.color('lightblue')
-t.end_fill()
+        time.sleep(1)
+        while t.undobufferentries():
+            t.undo()
 
-time.sleep(1)
-while t.undobufferentries():
-    t.undo()
-        
-t.reset()
-t.hideturtle()
-t.speed('fastest')
-t.clear()
-t.color('red', 'yellow')
-t.begin_fill()
-t.star(100, 36)
-t.end_fill()
+    def DemoB():
+        t.reset()
+        t.hideturtle()
+        t.speed('fastest')
+        t.clear()
+        t.color('red', 'yellow')
+        t.begin_fill()
+        t.star(100, 36)
+        t.end_fill()
+        t.up()
+        t.right(150)
+        t.forward(80)
+        t.color('green')
+        t.write("  Click to exit", font = ("Arial", 14, "bold") )
+        t.getscreen().exitonclick()
+
+    t = TurtleEx()
+    DemoA()
+    DemoB()
+    
 
 
