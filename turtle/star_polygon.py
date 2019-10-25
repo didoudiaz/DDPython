@@ -46,10 +46,12 @@ class TurtleEx(Turtle, TurtleGraphicsError):
         If neither step nor edgelen is provided, m is computed as (n-1)//2
         
         This method shares several similarities with circle(radius): 
-            - it begins and ends drawing the figure at the same position,
-            - if circle(radius, steps=n) is used to draw a polygon {n}, the
+            - It begins and ends drawing the figure at the same position,
+            - A regular convex polygon can be similarly drawn either with
+              circle(radius, steps=n) or with star(radius, n, 1) and
+            - If circle(radius, steps=n) is used to draw a polygon {n}, the
               vertices also corresponds to the vertices of any star {n/m}.
-            - it draws the star in counterclockwise direction if radius is
+            - It draws the star in counterclockwise direction if radius is
               positive, otherwise in clockwise direction. NB: a m>n//2 also
               inverts the direction.
               
