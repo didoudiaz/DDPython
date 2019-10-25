@@ -182,59 +182,75 @@ class TurtleEx(Turtle, TurtleGraphicsError):
 # A little demo                
 
 if __name__ == "__main__":
+    # start of glue code (for integration in module turtle.py do not copy this glue code)
+    t0 = TurtleEx() 
+    def getturtle():
+        return t0
+    def exitonclick():
+        t0.getscreen().exitonclick()
+    # end of glue code
     
-    def DemoA():
+    # this demos can be copied (or not) in the turtle.py module
+    def demo3():
+        """Demo of the star() new feature."""
         r=250
         n=7   # test with different n (5, 8, 12...)
 
-        t.hideturtle()
-        t.dot()
+        turtle = getturtle()
+        turtle.reset()
+        turtle.clear()
+        turtle.hideturtle()
 
-        t.penup()
-        t.sety(-r)
-        t.pendown()
+        turtle.dot()
 
-        t.speed('fastest')
-        t.circle(r)
-        t.color('green')
-        # trace a convex regular polygon. Could be done with t.star(r, n, 1) but use
+        turtle.penup()
+        turtle.sety(-r)
+        turtle.pendown()
+
+        turtle.speed('fastest')
+        turtle.circle(r)
+        turtle.color('green')
+        # trace a convex regular polygon. Could be done with turtle.star(r, n, 1) but use
         # circle() to check vertices share the same location with both methods
-        t.circle(r, steps = n)
+        turtle.circle(r, steps = n)
 
-        t.color('black', 'yellow')
-        t.begin_fill()
-        t.star(r, n, 2)
-        t.color('blue')
-        t.star(r, n, -3)
-        t.color('orange')
-        t.star(r, n, edgelen=220)
-        t.star(r, n, edgelen=200)
-        t.color('lightblue')
-        t.end_fill()
+        turtle.color('black', 'yellow')
+        turtle.begin_fill()
+        turtle.star(r, n, 2)
+        turtle.color('blue')
+        turtle.star(r, n, -3)
+        turtle.color('orange')
+        turtle.star(r, n, edgelen=220)
+        turtle.star(r, n, edgelen=200)
+        turtle.color('lightblue')
+        turtle.end_fill()
 
         time.sleep(1)
-        while t.undobufferentries():
-            t.undo()
+        while turtle.undobufferentries():
+            turtle.undo()
 
-    def DemoB():
-        t.reset()
-        t.hideturtle()
-        t.speed('fastest')
-        t.clear()
-        t.color('red', 'yellow')
-        t.begin_fill()
-        t.star(100, 36)
-        t.end_fill()
-        t.up()
-        t.right(150)
-        t.forward(80)
-        t.color('green')
-        t.write("  Click to exit", font = ("Arial", 14, "bold") )
-        t.getscreen().exitonclick()
+    def demo4():
+        """Demo to recreate the turtle star figure of https://docs.python.org/3.3/library/turtle.html."""
+        turtle = getturtle()
+        turtle.reset()
+        turtle.hideturtle()
+        turtle.speed('fastest')
+        turtle.clear()
+        turtle.color('red', 'yellow')
+        turtle.begin_fill()
+        turtle.star(100, 36)
+        turtle.end_fill()
+        turtle.up()
+        turtle.right(150)
+        turtle.forward(80)
+        turtle.color('green')
+        turtle.write("  Click to exit", font = ("Arial", 14, "bold") )
 
-    t = TurtleEx()
-    DemoA()
-    DemoB()
+    # these invocations can be copied in the turtle.py module
+    # demo2() should be well termlinated if demo3() and/or demo4() is executed after
+    demo3()
+    demo4()
+    exitonclick()
     
 
 
