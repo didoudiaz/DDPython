@@ -72,7 +72,7 @@ class TurtleEx(Turtle, TurtleGraphicsError):
             self.undobuffer.push(["seq"])
             self.undobuffer.cumulate = True
 
-        # Use short variable names
+        # Use short variable names (see figure StarPolygonData.png)
         
         r = radius
         n = vertices
