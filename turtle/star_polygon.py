@@ -21,8 +21,8 @@ class TurtleEx(Turtle, TurtleGraphicsError):
         to connect the vertices. The vertices are numbered from 0 to n-1 and
         regularly placed on the circle. Starting from the vertex 0, the star is
         built step by step by connecting the vertex i to the vertex (i+m) % n
-        until the initial vertex 0 is reached. If n and m are coprime (d=gcd(n,m)=1),
-        all vertex are reached and the star is done.
+        until the initial vertex 0 is reached. 
+        If n and m are coprime (d=gcd(n,m)=1), all vertex are reached and the star is done.
         if n and m are not coprime (d>1) the construction is done via
         stellation: the figure is composed of d star polygons {(n//d) / (m//d)}
         e.g.: hexagram {6/2} is composed of 2 triangles: {6/2} ==> 2x{3}
@@ -81,6 +81,9 @@ class TurtleEx(Turtle, TurtleGraphicsError):
         m = step
         u = edgelen
 
+        pi = math.pi
+        pi2 = pi * 2.0
+
         onlyHull = True
         if m is None and u is None:
             m = max(1, (n-1) // 2)
@@ -101,38 +104,38 @@ class TurtleEx(Turtle, TurtleGraphicsError):
             sgn = -1
         
         if not onlyHull: # mode {m/n} with internal edges (as done by hand for a 5-points star)
-            alpha = sgn * 360.0 / n
+            alpha = sgn * pi2 / n
             beta = alpha * (m + 1.0) / 2.0  # 1->0.5 2->1.5, 3->2, 4->2.5, ...
             gamma = alpha * m
-            delta = sgn * (n - 2.0) / n * 180.0
-            s = 2.0 * r * math.sin(alpha / 2.0 * math.pi / 180.0)
-            t = 2.0 * r * math.sin(gamma / 2.0 * math.pi / 180.0)
+            delta = sgn * (n - 2.0) / n * pi
+            s = 2.0 * r * math.sin(alpha / 2.0)
+            t = 2.0 * r * math.sin(gamma / 2.0)
         elif u is None: # mode {m/n} without internal edges, compute u (edgelen) from r, n and m
-            alpha = sgn * 360.0 / n
+            alpha = sgn * pi2 / n
             gamma = alpha * m
-            delta = sgn * (n - 2.0) / n * 180.0
-            theta = 180.0 - gamma
+            delta = sgn * (n - 2.0) / n * pi
+            theta = pi - gamma
             rho = (delta - theta) / 2.0
-            lambd = 180.0 - (alpha + theta) / 2.0
-            sigma = 180.0 - 2.0 * rho
-            u = math.sin(alpha / 2.0 * math.pi / 180.0) * r / math.sin(lambd * math.pi / 180.0)
+            lambd = pi - (alpha + theta) / 2.0
+            sigma = pi - 2.0 * rho
+            u = math.sin(alpha / 2.0) * r / math.sin(lambd)
         else: # mode n and u (thus without internal edges)
             r = sgn * r
-            alpha = sgn * 360.0 / n
-            delta = sgn * (n - 2.0) / n * 180.0
-            s = 2.0 * r * math.sin(alpha / 2.0 * math.pi / 180.0)
+            alpha = sgn * pi2 / n
+            delta = sgn * (n - 2.0) / n * pi
+            s = 2.0 * r * math.sin(alpha / 2.0)
             if u < s / 2.0:
                 raise TurtleGraphicsError("Bad argument for edgelen should be greater than %.2f" % (s / 2.0))
-            rho = math.acos(s / (2 * u)) / math.pi * 180.0
+            rho = math.acos(s / (2.0 * u))
             theta = delta - 2.0 * rho
-            sigma = 180.0 - 2.0 * rho
+            sigma = pi - 2.0 * rho
 
         # save state
         
         orient = self.heading()
         posit = self.position()
         full = self._fullcircle
-        self.degrees() # from now use angles expressed in classical 360 degrees
+        self.radians() # from now use angles expressed in radians
 
         if not onlyHull: # mode {m/n} with internal edges (as done by hand for a 5-points star)
             
@@ -161,12 +164,12 @@ class TurtleEx(Turtle, TurtleGraphicsError):
                 
         else: # no internal edges, only the external shape (hull) with edgelen = u
             
-            self._rotate(90 - theta / 2)
+            self._rotate((pi - theta) / 2.0)
             for i in range(n):
                 self.forward(u)
-                self._rotate(sigma - 180)
+                self._rotate(sigma - pi)
                 self.forward(u)
-                self._rotate(180 - theta)
+                self._rotate(pi - theta)
 
         # restore state
         
@@ -212,9 +215,10 @@ if __name__ == "__main__":
         turtle.speed('fastest')
         turtle.circle(r)
         turtle.color('green')
+
         # trace a convex regular polygon. Could be done with turtle.star(r, n, 1) but use
         # circle() to check vertices share the same location with both methods
-        turtle.circle(r, steps = n)
+        # turtle.circle(r, steps = n)
 
         turtle.color('black', 'yellow')
         turtle.begin_fill()
@@ -253,6 +257,3 @@ if __name__ == "__main__":
     demo3()
     demo4()
     exitonclick()
-    
-
-
