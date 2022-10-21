@@ -88,13 +88,14 @@ class TurtleEx(Turtle, TurtleGraphicsError):
         if m is None and u is None:
             m = max(1, (n-1) // 2)
         if m is not None:
-            u = None
+            if u is not None:
+                raise TurtleGraphicsError("Bad argument for step or edgelen: cannot be given together")
             if m >= 0:
                 onlyHull = False
             else:
                 m = -m
                 if m <= 0 or m >= n:
-                    raise TurtleGraphicsError("Bad argument for step should be in [1..%d]" % (n - 1))
+                    raise TurtleGraphicsError("Bad argument for step: should be in [1..%d]" % (n - 1))
                 if m > n / 2:  # result in the inversion of the drawing
                     m = n - m
                     r = -r     # report the inversion to r to handle stellation in the chosen direction 
@@ -125,7 +126,7 @@ class TurtleEx(Turtle, TurtleGraphicsError):
             delta = sgn * (n - 2.0) / n * pi
             s = 2.0 * r * math.sin(alpha / 2.0)
             if u < s / 2.0:
-                raise TurtleGraphicsError("Bad argument for edgelen should be greater than %.2f" % (s / 2.0))
+                raise TurtleGraphicsError("Bad argument for edgelen: should be greater than %.2f" % (s / 2.0))
             rho = math.acos(s / (2.0 * u))
             theta = delta - 2.0 * rho
             sigma = pi - 2.0 * rho
