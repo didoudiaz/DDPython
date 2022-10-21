@@ -21,8 +21,8 @@ class TurtleEx(Turtle, TurtleGraphicsError):
         to connect the vertices. The vertices are numbered from 0 to n-1 and
         regularly placed on the circle. Starting from the vertex 0, the star is
         built step by step by connecting the vertex i to the vertex (i+m) % n
-        until the initial vertex 0 is reached. 
-        If n and m are coprime (d=gcd(n,m)=1), all vertex are reached and the star is done.
+        until the initial vertex 0 is reached. If n and m are coprime (d=gcd(n,m)=1),
+        all vertex are reached and the star is done.
         if n and m are not coprime (d>1) the construction is done via
         stellation: the figure is composed of d star polygons {(n//d) / (m//d)}
         e.g.: hexagram {6/2} is composed of 2 triangles: {6/2} ==> 2x{3}
